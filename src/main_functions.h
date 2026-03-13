@@ -4,9 +4,7 @@
 // Forward declarations
 void setup_func(void);
 void loop_func(void);
-void run_inference_background(bool debug);
+void run_inference_background();
 float ei_get_sign(float number);
-
-
 
 #endif // _MAIN_FUNCTIONS_H

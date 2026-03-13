@@ -1,5 +1,6 @@
 #include <Fall_Detection_ADL_Dataset_inferencing.h>
 #include <Arduino_BMI270_BMM150.h>
+#include "main_functions.h"
 
 /* Constant defines -------------------------------------------------------- */
 #define CONVERT_G_TO_MS2    9.80665f
@@ -11,9 +12,6 @@ static uint32_t run_inference_every_ms = 200;
 static rtos::Thread inference_thread(osPriorityLow);
 static float buffer[EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE] = { 0 };
 static float inference_buffer[EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE];
-
-void run_inference_background(bool debug)
-
 
 void setup_func() {
     // put your setup code here, to run once:
@@ -35,7 +33,7 @@ void setup_func() {
         return;
     }
 
-    inference_thread.start(mbed::callback(&run_inference_background(debug_nn)));
+    inference_thread.start(mbed::callback(&run_inference_background));
 }
 
 /**
@@ -77,9 +75,8 @@ void loop_func() {
 /**
  * @brief      Run inferencing in the background.
  * 
- * @param      debug = 1 enables debug mode
  */
-void run_inference_background(bool debug)
+void run_inference_background()
 {
     // wait until we have a full buffer
     delay((EI_CLASSIFIER_INTERVAL_MS * EI_CLASSIFIER_RAW_SAMPLE_COUNT) + 100);
@@ -104,7 +101,7 @@ void run_inference_background(bool debug)
         // Run the classifier
         ei_impulse_result_t result = { 0 };
 
-        err = run_classifier(&signal, &result, debug);
+        err = run_classifier(&signal, &result, debug_nn);
         if (err != EI_IMPULSE_OK) {
             ei_printf("ERR: Failed to run classifier (%d)\n", err);
             return;

@@ -3,7 +3,7 @@
 /**
 * @brief      Arduino setup function
 */
-void setup()
+extern "C" void setup()
 {
     setup_func();
 }
@@ -11,7 +11,7 @@ void setup()
 /**
 * @brief      Get data and run inferencing
 */
-void loop()
+extern "C" void loop()
 {
     loop_func();
 }
