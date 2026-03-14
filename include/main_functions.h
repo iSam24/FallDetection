@@ -1,3 +1,5 @@
+// Main functions for setup, running inference and data collection
+
 #ifndef _MAIN_FUNCTIONS_H
 #define _MAIN_FUNCTIONS_H
 

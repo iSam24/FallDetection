@@ -1,6 +1,7 @@
 #include <Fall_Detection_ADL_Dataset_inferencing.h>
 #include <Arduino_BMI270_BMM150.h>
 #include "main_functions.h"
+#include "process_prediction.h"
 
 /* Constant defines -------------------------------------------------------- */
 #define CONVERT_G_TO_MS2    9.80665f
@@ -115,7 +116,10 @@ void run_inference_background()
 
         // ei_classifier_smooth_update yields the predicted label
         const char *prediction = ei_classifier_smooth_update(&smooth, &result);
+        handle_prediction(prediction, result.anomaly);
         ei_printf("%s ", prediction);
+
+
         // print the cumulative results
         ei_printf(" [ ");
         for (size_t ix = 0; ix < smooth.count_size; ix++) {
