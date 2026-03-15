@@ -2,6 +2,7 @@
 #include <Arduino_BMI270_BMM150.h>
 #include "main_functions.h"
 #include "process_prediction.h"
+#include "ble_util.h"
 
 /* Constant defines -------------------------------------------------------- */
 #define CONVERT_G_TO_MS2    9.80665f
@@ -15,11 +16,10 @@ static float buffer[EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE] = { 0 };
 static float inference_buffer[EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE];
 
 void setup_func() {
-    // put your setup code here, to run once:
     Serial.begin(115200);
+    
     // comment out the below line to cancel the wait for USB connection (needed for native USB)
     while (!Serial);
-    Serial.println("Edge Impulse Inferencing Demo");
 
     if (!IMU.begin()) {
         ei_printf("Failed to initialize IMU!\r\n");
@@ -32,6 +32,11 @@ void setup_func() {
     if (EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME != 3) {
         ei_printf("ERR: EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME should be equal to 3 (the 3 sensor axes)\n");
         return;
+    }
+
+    // Setup BLE
+    if(!bleSetup()) {
+        ei_printf("ERR: BLE setup not intialised\n");
     }
 
     inference_thread.start(mbed::callback(&run_inference_background));
@@ -107,18 +112,17 @@ void run_inference_background()
             ei_printf("ERR: Failed to run classifier (%d)\n", err);
             return;
         }
+        
+        // ei_classifier_smooth_update yields the predicted label
+        const char *prediction = ei_classifier_smooth_update(&smooth, &result);
+        handle_prediction(prediction, result.anomaly);
 
         // print the predictions
         ei_printf("Predictions ");
         ei_printf("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
             result.timing.dsp, result.timing.classification, result.timing.anomaly);
         ei_printf(": ");
-
-        // ei_classifier_smooth_update yields the predicted label
-        const char *prediction = ei_classifier_smooth_update(&smooth, &result);
-        handle_prediction(prediction, result.anomaly);
         ei_printf("%s ", prediction);
-
 
         // print the cumulative results
         ei_printf(" [ ");
@@ -132,6 +136,8 @@ void run_inference_background()
             }
         }
         ei_printf("]\n");
+        ei_printf("Raw label: '%s'\n", prediction);
+
 
         delay(run_inference_every_ms);
     }

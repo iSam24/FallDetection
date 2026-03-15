@@ -1,14 +1,17 @@
-#include "process_prediction.h"
 #include <string.h>
+#include "process_prediction.h"
+#include "ble_util.h"
 
 prediction_label_t parse_prediction(const char* label, float anomaly_score) {
     if (anomaly_score > 0.3f) {
         return PREDICTION_ANOMALY;
     }
     if (strcmp(label, "ADL") == 0) {
+        Serial.println("parse_prediction: ADL detected");
         return PREDICTION_ADL;
     }
     if (strcmp(label, "FALL") == 0) {
+        Serial.println("parse_prediction: FALL detected");
         return PREDICTION_FALL;
     }
     return PREDICTION_UNCERTAIN;
@@ -19,19 +22,22 @@ void handle_prediction(const char* label, float anomaly_score) {
 
     switch (prediction) {
         case  PREDICTION_ANOMALY:
-            // write to log "Anomoly detected"
+            // Notify anomoly over BLE
+            sendBLENotification(prediction, anomaly_score);
             break;
 
         case PREDICTION_ADL:
-            // do nothing (saves power)
+            sendBLENotification(prediction, anomaly_score);
             break;
 
         case PREDICTION_FALL:
             // Send bluetooth notification of a fall with timestamp
+            sendBLENotification(prediction, anomaly_score);
             break;
 
         case PREDICTION_UNCERTAIN:
-            // write to log "Uncertain classifcation"
+            // Notify over BLE
+            sendBLENotification(prediction, anomaly_score);
             break;
 
         default:
@@ -39,4 +45,3 @@ void handle_prediction(const char* label, float anomaly_score) {
             break;
     }
 }
-
