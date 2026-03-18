@@ -10,6 +10,8 @@ This project uses machine learning to classify human activities into two categor
 
 The system monitors acceleration data from a 3-axis accelerometer and classifies activities in real-time on the IoT device.
 
+Link to Edge Impulse Project: https://studio.edgeimpulse.com/studio/923540
+
 ## Hardware
 
 - **Microcontroller**: Arduino Nano 33 BLE Sense Rev 2
