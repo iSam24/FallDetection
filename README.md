@@ -1,6 +1,6 @@
 # Fall Detection System
 
-A fall detection and activity recognition system built with Arduino Nano 33 BLE Sense Rev 2 and Edge Impulse.
+A fall detection and activity recognition system built with Arduino Nano 33 BLE Sense Rev 2 and Edge Impulse. Sends a bluetooth notification when wearer falls.
 
 ## Overview
 
@@ -20,17 +20,10 @@ The system monitors acceleration data from a 3-axis accelerometer and classifies
 
 - **Architecture**: 1D Convolutional Neural Network (1D CNN)
 - **Input**: 3-axis accelerometer data
-- **Training Dataset**: SisFall (fall detection benchmark dataset)
+- **Training Dataset**: SisFall (fall detection benchmark dataset) https://www.kaggle.com/datasets/nvnikhil0001/sis-fall-original-dataset
 - **Framework**: Edge Impulse
 - **Deployment**: TensorFlow Lite Micro
 
-## Project Structure
-
-- `src/` - Main firmware code
-- `src/main.cpp` - Arduino entry point
-- `src/main_functions.cpp/h` - Application logic for data collection and inference
-- `src/edge-impulse-sdk/` - Edge Impulse ML SDK
-- `src/tflite-model/` - Compiled TensorFlow Lite model
 
 ## Building & Uploading
 
