@@ -20,7 +20,15 @@ Link to Edge Impulse Project: https://studio.edgeimpulse.com/studio/923540
 
 ## Machine Learning Model
 
-- **Architecture**: 1D Convolutional Neural Network (1D CNN)
+- **Architecture**: Simple feed forward neural network
+Input layer        (n features)
+      ↓
+Dense layer 1      (fully connected, e.g. ReLU activation)
+      ↓
+Dense layer 2      (fully connected, e.g. ReLU activation)
+      ↓
+Output layer       (4 neurons, Softmax activation)
+
 - **Input**: 3-axis accelerometer data
 - **Training Dataset**: SisFall (fall detection benchmark dataset) https://www.kaggle.com/datasets/nvnikhil0001/sis-fall-original-dataset
 - **Framework**: Edge Impulse
